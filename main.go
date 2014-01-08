@@ -29,8 +29,8 @@ func main() {
 	c := make(chan i3status.Message)
 	b := i3status.NewBar(c)
 
-	w1 := i3status.NewWidget(c)
-	w2 := i3status.NewWidget(c)
+	w1 := i3status.NewBaseWidget(c)
+	w2 := i3status.NewDateWidget(c)
 	w1.Start()
 	w2.Start()
 	b.Start()

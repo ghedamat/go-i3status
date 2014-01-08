@@ -24,8 +24,8 @@ func TestBarStart(t *testing.T) {
 	Convey("Given a bar", t, func() {
 
 		c := make(chan i3status.Message)
-		w1 := i3status.NewWidget(c)
-		w2 := i3status.NewWidget(c)
+		w1 := i3status.NewBaseWidget(c)
+		w2 := i3status.NewBaseWidget(c)
 		w1.Start()
 		w2.Start()
 
@@ -53,8 +53,8 @@ func TestBarMessage(t *testing.T) {
 		})
 
 		Convey("When it's started and widgets are running", func() {
-			w1 := i3status.NewWidget(c)
-			w2 := i3status.NewWidget(c)
+			w1 := i3status.NewBaseWidget(c)
+			w2 := i3status.NewBaseWidget(c)
 			w1.Start()
 			w2.Start()
 			Convey("it has a message", func() {
@@ -62,6 +62,17 @@ func TestBarMessage(t *testing.T) {
 				time.Sleep(1 * 1e9)
 				json := `[{"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"3","urgent":false,"separator":true,"separator_block_width":10}, {"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"4","urgent":false,"separator":true,"separator_block_width":10}]`
 				So(b.Message(), ShouldEqual, json)
+			})
+		})
+	})
+}
+
+func TestBarOrder(t *testing.T) {
+	Convey("Given some widgets", t, func() {
+		//w1 := i3status.NewWidget(c)
+		//w2 := i3status.NewWidget(c)
+		Convey("When a bar is created", func() {
+			Convey("widget are rendered in order", func() {
 			})
 		})
 	})

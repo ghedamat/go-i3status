@@ -5,7 +5,11 @@ import (
 	"time"
 )
 
-type Widget struct {
+type Widget interface {
+	Start()
+}
+
+type BaseWidget struct {
 	Output   chan Message
 	Refresh  time.Duration
 	Instance int
@@ -13,9 +17,9 @@ type Widget struct {
 
 var instanceCount int
 
-func NewWidget(output chan Message) *Widget {
+func NewBaseWidget(output chan Message) *BaseWidget {
 	instanceCount++
-	w := Widget{
+	w := BaseWidget{
 		Output:   output,
 		Refresh:  1000,
 		Instance: instanceCount,
@@ -23,7 +27,7 @@ func NewWidget(output chan Message) *Widget {
 	return &w
 }
 
-func (w *Widget) basicLoop() {
+func (w *BaseWidget) basicLoop() {
 	msg := NewMessage()
 	msg.FullText = "Basic Widget"
 	msg.Name = "Basic"
@@ -35,6 +39,6 @@ func (w *Widget) basicLoop() {
 	}
 }
 
-func (w *Widget) Start() {
+func (w *BaseWidget) Start() {
 	go w.basicLoop()
 }
