@@ -7,14 +7,6 @@ import (
 )
 
 func TestWidgetConstructor(t *testing.T) {
-	Convey("Given a widget", t, func() {
-		Convey("When it is created", func() {
-			Convey("a channel for incoming events is returned", func() {
-				So("", ShouldEqual, "implement me")
-			})
-		})
-	})
-
 	Convey("Given a Message channel", t, func() {
 		c := make(chan i3status.Message)
 		Convey("When a widget is created and a channel is passed", func() {
