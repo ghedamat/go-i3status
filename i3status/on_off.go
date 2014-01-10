@@ -9,10 +9,12 @@ type OnOffWidget struct {
 	BaseWidget
 	Input chan Entry
 	On    bool
+	Sub   *Subscriber
 }
 
-func NewOnOffWidget(output chan Message, input chan Entry) *OnOffWidget {
+func NewOnOffWidget(output chan Message, sub *Subscriber) *OnOffWidget {
 	instanceCount++
+	input := make(chan Entry)
 	w := OnOffWidget{
 		BaseWidget{
 			output,
@@ -21,6 +23,7 @@ func NewOnOffWidget(output chan Message, input chan Entry) *OnOffWidget {
 		},
 		input,
 		false,
+		sub,
 	}
 	return &w
 }
@@ -43,16 +46,19 @@ func (w *OnOffWidget) sendMessage() {
 }
 
 func (w *OnOffWidget) readLoop() {
-	<-w.Input
-	if w.On {
-		w.On = false
-	} else {
-		w.On = true
+	for {
+		<-w.Input
+		if w.On {
+			w.On = false
+		} else {
+			w.On = true
+		}
+		go w.sendMessage()
 	}
-	go w.sendMessage()
 }
 
 func (w *OnOffWidget) Start() {
+	w.Sub.Subscribe(w.Input)
 	go w.sendMessage()
 	go w.readLoop()
 }
