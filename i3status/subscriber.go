@@ -3,6 +3,7 @@ package i3status
 import (
 	"fmt"
 	"io"
+	"os"
 )
 
 type Subscriber struct {
@@ -19,6 +20,9 @@ func (s *Subscriber) Len() int {
 }
 
 func (s *Subscriber) Start() {
+	if s.In == nil {
+		s.In = os.Stdin
+	}
 	go func() {
 		var i string
 		for {

@@ -13,11 +13,7 @@ type DateWidget struct {
 func NewDateWidget(output chan Message) *DateWidget {
 	instanceCount++
 	w := DateWidget{
-		BaseWidget{
-			output,
-			1000,
-			instanceCount,
-		},
+		*NewBaseWidget(output),
 	}
 	return &w
 }

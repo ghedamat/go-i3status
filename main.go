@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/ghedamat/go-i3status/i3status"
-	"os"
 	"time"
 )
 
@@ -30,7 +29,6 @@ func main() {
 	c := make(chan i3status.Message)
 	b := i3status.NewBar(c)
 	sub := new(i3status.Subscriber)
-	sub.In = os.Stdin
 
 	w1 := i3status.NewBaseWidget(c)
 	w2 := i3status.NewDateWidget(c)
