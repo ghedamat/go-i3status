@@ -29,12 +29,12 @@ func main() {
 	c := make(chan i3status.Message)
 	b := i3status.NewBar(c)
 
-	w1 := i3status.NewBaseWidget()
 	w2 := i3status.NewDateWidget()
 	w3 := i3status.NewOnOffWidget()
-	b.Add(w1)
+	w4 := i3status.NewI3statusWidget()
 	b.Add(w2)
 	b.Add(w3)
+	b.Add(w4)
 
 	for {
 		fmt.Println(b.Message() + ",")
