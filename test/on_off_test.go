@@ -9,9 +9,10 @@ import (
 func TestOnOffWidgetConstructor(t *testing.T) {
 	Convey("Given an input and an output channel", t, func() {
 		c := make(chan i3status.Message)
-		sub := new(i3status.Subscriber)
+		bar := i3status.NewBar(c)
 		Convey("When OnOff is created", func() {
-			w := i3status.NewOnOffWidget(c, sub)
+			w := i3status.NewOnOffWidget()
+			bar.Add(w)
 			Convey("output channel is available", func() {
 				So(w.Output, ShouldEqual, c)
 			})
@@ -22,27 +23,31 @@ func TestOnOffWidgetConstructor(t *testing.T) {
 func TestOnOffWidget(t *testing.T) {
 	Convey("Given an OnOff Widget", t, func() {
 		c := make(chan i3status.Message)
-		sub := new(i3status.Subscriber)
-		w := i3status.NewOnOffWidget(c, sub)
+		i := make(chan i3status.Entry)
+		w := i3status.NewOnOffWidget()
+		w.SetChannels(c, i)
 		w.Start()
-		Convey("When and entry is sent", func() {
+		Convey("When an entry is sent", func() {
 			w.Input <- i3status.Entry{}
 			Convey("widget status goes on", func() {
 				So(w.On, ShouldEqual, true)
 			})
 		})
 	})
+}
+func TestOnOffWidgetMessage(t *testing.T) {
 	Convey("Given an OnOff Widget", t, func() {
 		c := make(chan i3status.Message)
-		sub := new(i3status.Subscriber)
-		w := i3status.NewOnOffWidget(c, sub)
+		i := make(chan i3status.Entry)
+		w := i3status.NewOnOffWidget()
+		w.SetChannels(c, i)
 		w.Start()
 		Convey("When and entry is sent", func() {
 			msg := <-c
 			So(msg.FullText, ShouldEqual, "Pants Off")
 			w.Input <- i3status.Entry{}
 			Convey("widget message is On", func() {
-				msg := <-c
+				msg = <-c
 				So(msg.FullText, ShouldEqual, "Pants On")
 			})
 		})

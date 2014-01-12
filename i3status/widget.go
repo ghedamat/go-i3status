@@ -5,22 +5,25 @@ import (
 	"time"
 )
 
-type Widget interface {
-	Start()
-}
-
 type BaseWidget struct {
 	Output   chan Message
+	Input    chan Entry
 	Refresh  time.Duration
 	Instance int
 }
 
 var instanceCount int
 
-func NewBaseWidget(output chan Message) *BaseWidget {
+func (w *BaseWidget) SetChannels(out chan Message, in chan Entry) {
+	w.Output = out
+	w.Input = in
+}
+
+func NewBaseWidget() *BaseWidget {
 	instanceCount++
 	w := BaseWidget{
-		Output:   output,
+		Output:   nil,
+		Input:    nil,
 		Refresh:  1000,
 		Instance: instanceCount,
 	}

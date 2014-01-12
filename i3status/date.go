@@ -10,10 +10,10 @@ type DateWidget struct {
 	BaseWidget
 }
 
-func NewDateWidget(output chan Message) *DateWidget {
+func NewDateWidget() *DateWidget {
 	instanceCount++
 	w := DateWidget{
-		*NewBaseWidget(output),
+		*NewBaseWidget(),
 	}
 	return &w
 }

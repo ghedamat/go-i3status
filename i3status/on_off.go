@@ -7,23 +7,14 @@ import (
 
 type OnOffWidget struct {
 	BaseWidget
-	Input chan Entry
-	On    bool
-	Sub   *Subscriber
+	On bool
 }
 
-func NewOnOffWidget(output chan Message, sub *Subscriber) *OnOffWidget {
+func NewOnOffWidget() *OnOffWidget {
 	instanceCount++
-	input := make(chan Entry)
 	w := OnOffWidget{
-		BaseWidget{
-			output,
-			1000,
-			instanceCount,
-		},
-		input,
+		*NewBaseWidget(),
 		false,
-		sub,
 	}
 	return &w
 }
@@ -58,7 +49,6 @@ func (w *OnOffWidget) readLoop() {
 }
 
 func (w *OnOffWidget) Start() {
-	w.Sub.Subscribe(w.Input)
 	go w.sendMessage()
 	go w.readLoop()
 }

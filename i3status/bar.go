@@ -1,12 +1,22 @@
 package i3status
 
 import (
+	"fmt"
+	"io"
+	"os"
 	"strings"
 )
+
+type Widget interface {
+	Start()
+	SetChannels(chan Message, chan Entry)
+}
 
 type Bar struct {
 	Input    chan Message
 	Messages map[string]Message
+	subs     [](chan Entry)
+	In       io.Reader
 }
 
 func NewBar(c chan Message) *Bar {
@@ -14,7 +24,15 @@ func NewBar(c chan Message) *Bar {
 		Input:    c,
 		Messages: make(map[string]Message),
 	}
+	b.start()
 	return &b
+}
+
+func (b *Bar) Add(w Widget) {
+	in := make(chan Entry)
+	w.SetChannels(b.Input, in)
+	b.subs = append(b.subs, in)
+	w.Start()
 }
 
 func (b *Bar) barLoop() {
@@ -24,8 +42,26 @@ func (b *Bar) barLoop() {
 	}
 }
 
-func (b *Bar) Start() {
+func (b *Bar) readLoop() {
+	var i string
+	for {
+		fmt.Fscanf(b.In, "%s", &i)
+		for _, c := range b.subs {
+			c <- *NewEntry(i)
+		}
+	}
+}
+
+func (b *Bar) start() {
+	if b.In == nil {
+		b.In = os.Stdin
+	}
 	go b.barLoop()
+	go b.readLoop()
+}
+
+func (b *Bar) Len() int {
+	return len(b.subs)
 }
 
 func (b *Bar) Message() string {
