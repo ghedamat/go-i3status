@@ -28,16 +28,13 @@ func main() {
 	fmt.Println("[")
 	c := make(chan i3status.Message)
 	b := i3status.NewBar(c)
-	sub := new(i3status.Subscriber)
 
-	w1 := i3status.NewBaseWidget(c)
-	w2 := i3status.NewDateWidget(c)
-	w3 := i3status.NewOnOffWidget(c, sub)
-	w1.Start()
-	w2.Start()
-	w3.Start()
-	b.Start()
-	sub.Start()
+	w1 := i3status.NewBaseWidget()
+	w2 := i3status.NewDateWidget()
+	w3 := i3status.NewOnOffWidget()
+	b.Add(w1)
+	b.Add(w2)
+	b.Add(w3)
 
 	for {
 		fmt.Println(b.Message() + ",")

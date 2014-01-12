@@ -42,6 +42,13 @@ func (w *BaseWidget) basicLoop() {
 	}
 }
 
+func (w *BaseWidget) readLoop() {
+	for {
+		<-w.Input
+	}
+}
+
 func (w *BaseWidget) Start() {
 	go w.basicLoop()
+	go w.readLoop()
 }

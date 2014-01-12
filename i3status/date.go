@@ -31,4 +31,5 @@ func (w *DateWidget) basicLoop() {
 }
 func (w *DateWidget) Start() {
 	go w.basicLoop()
+	go w.readLoop()
 }
