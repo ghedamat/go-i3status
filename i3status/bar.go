@@ -7,11 +7,6 @@ import (
 	"strings"
 )
 
-type Widget interface {
-	Start()
-	SetChannels(chan Message, chan Entry)
-}
-
 type Bar struct {
 	Input    chan Message
 	Messages map[string]Message
@@ -44,6 +39,9 @@ func (b *Bar) barLoop() {
 
 func (b *Bar) readLoop() {
 	var i string
+	if len(b.subs) == 0 {
+		return
+	}
 	for {
 		fmt.Fscanf(b.In, "%s", &i)
 		for _, c := range b.subs {
