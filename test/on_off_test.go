@@ -8,13 +8,12 @@ import (
 
 func TestOnOffWidgetConstructor(t *testing.T) {
 	Convey("Given an input and an output channel", t, func() {
-		c := make(chan i3status.Message)
-		bar := i3status.NewBar(c)
+		bar := i3status.NewBar()
 		Convey("When OnOff is created", func() {
 			w := i3status.NewOnOffWidget()
 			bar.Add(w)
 			Convey("output channel is available", func() {
-				So(w.Output, ShouldEqual, c)
+				So(w.Output, ShouldEqual, bar.Input)
 			})
 		})
 	})

@@ -8,29 +8,17 @@ import (
 	"time"
 )
 
-func TestBarCreate(t *testing.T) {
-	Convey("Given a channel", t, func() {
-
-		c := make(chan i3status.Message)
-		Convey("When a Bar is created", func() {
-			b := i3status.NewBar(c)
-			Convey("it has an input channel", func() {
-				So(b.Input, ShouldEqual, c)
-			})
-		})
-	})
-}
-
 func TestBarAdd(t *testing.T) {
 	Convey("Given a bar", t, func() {
-		c := make(chan i3status.Message)
-		b := i3status.NewBar(c)
+		b := i3status.NewBar()
 
 		w1 := i3status.NewBaseWidget()
 		w2 := i3status.NewBaseWidget()
 		Convey("When widgets are added", func() {
 			b.Add(w1)
+			<-b.Output
 			b.Add(w2)
+			<-b.Output
 			Convey("it gets messages from the widgets", func() {
 				time.Sleep(1)
 				So(len(b.Messages), ShouldEqual, 2)
@@ -41,8 +29,7 @@ func TestBarAdd(t *testing.T) {
 
 func TestBarMessage(t *testing.T) {
 	Convey("Given a bar", t, func() {
-		c := make(chan i3status.Message)
-		b := i3status.NewBar(c)
+		b := i3status.NewBar()
 
 		Convey("When it's just created", func() {
 			Convey("it has an empty message", func() {
@@ -55,10 +42,32 @@ func TestBarMessage(t *testing.T) {
 			w2 := i3status.NewBaseWidget()
 			Convey("it has a message", func() {
 				b.Add(w1)
+				<-b.Output
 				b.Add(w2)
-				time.Sleep(1 * 1e9)
+				<-b.Output
+				time.Sleep(1)
 				json := `[{"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"3","urgent":false,"separator":true,"separator_block_width":10}, {"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"4","urgent":false,"separator":true,"separator_block_width":10}]`
 				So(b.Message(), ShouldEqual, json)
+			})
+		})
+	})
+}
+
+func TestBarOutput(t *testing.T) {
+	Convey("Given a bar", t, func() {
+		b := i3status.NewBar()
+
+		Convey("When it's started and widgets are running", func() {
+			w1 := i3status.NewBaseWidget()
+			w2 := i3status.NewBaseWidget()
+			Convey("it has a message", func() {
+				b.Add(w1)
+				msg := <-b.Output
+				b.Add(w2)
+				msg = <-b.Output
+				time.Sleep(1)
+				json := `[{"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"5","urgent":false,"separator":true,"separator_block_width":10}, {"full_text":"Basic Widget","short_text":"","color":"#ffffff","min_width":0,"align":"left","name":"Basic","instance":"6","urgent":false,"separator":true,"separator_block_width":10}]`
+				So(msg, ShouldEqual, json)
 			})
 		})
 	})
@@ -77,8 +86,7 @@ func TestBarOrder(t *testing.T) {
 
 func TestBarAddLength(t *testing.T) {
 	Convey("Given a Bar", t, func() {
-		c := make(chan i3status.Message)
-		b := i3status.NewBar(c)
+		b := i3status.NewBar()
 		Convey("when a widget is added", func() {
 			w1 := i3status.NewBaseWidget()
 			b.Add(w1)
@@ -91,8 +99,7 @@ func TestBarAddLength(t *testing.T) {
 
 func TestBarSendsEntries(t *testing.T) {
 	Convey("Given a subscriber with a channel", t, func() {
-		c := make(chan i3status.Message)
-		b := i3status.NewBar(c)
+		b := i3status.NewBar()
 		w1 := i3status.NewBaseWidget()
 		b.Add(w1)
 		Convey("when a message arrives", func() {
@@ -109,8 +116,7 @@ func TestBarSendsEntries(t *testing.T) {
 
 func TestBarSendsMultipleEntries(t *testing.T) {
 	Convey("Given a subscriber with a channel", t, func() {
-		c := make(chan i3status.Message)
-		b := i3status.NewBar(c)
+		b := i3status.NewBar()
 		w1 := i3status.NewBaseWidget()
 		b.Add(w1)
 		Convey("when a multiple messages are sent", func() {

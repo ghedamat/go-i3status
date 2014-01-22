@@ -12,12 +12,14 @@ type Bar struct {
 	Messages map[string]Message
 	subs     [](chan Entry)
 	In       io.Reader
+	Output   chan string
 }
 
-func NewBar(c chan Message) *Bar {
+func NewBar() *Bar {
 	b := Bar{
-		Input:    c,
+		Input:    make(chan Message),
 		Messages: make(map[string]Message),
+		Output:   make(chan string),
 	}
 	b.start()
 	return &b
@@ -34,6 +36,7 @@ func (b *Bar) barLoop() {
 	for {
 		msg := <-b.Input
 		b.Messages[msg.Name+msg.Instance] = msg
+		b.Output <- b.Message()
 	}
 }
 

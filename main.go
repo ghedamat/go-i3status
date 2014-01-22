@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/ghedamat/go-i3status/i3status"
-	"time"
 )
 
 func main() {
@@ -26,18 +25,17 @@ func main() {
 	*/
 	fmt.Println(`{"version":1,"click_events": true}`)
 	fmt.Println("[")
-	c := make(chan i3status.Message)
-	b := i3status.NewBar(c)
+	b := i3status.NewBar()
 
 	b.Add(i3status.NewTimerWidget())
-	//b.Add(i3status.NewDateWidget())
+	b.Add(i3status.NewDateWidget())
 	//b.Add(i3status.NewOnOffWidget())
 	//w4 := i3status.NewI3statusWidget()
 	b.Add(i3status.NewEchoWidget())
 
 	for {
-		fmt.Println(b.Message() + ",")
-		time.Sleep(1 * 1e9)
+		m := <-b.Output
+		fmt.Println(m + ",")
 	}
 
 }
