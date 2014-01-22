@@ -57,13 +57,10 @@ func (w *TimerWidget) toggleStatus(button int) {
 func (w *TimerWidget) readLoop() {
 	for {
 		i := <-w.Input
-		if i.Name != "Timer" {
-			return
+		if i.Name == "Timer" {
+			w.toggleStatus(i.Button)
+			go w.sendMessage()
 		}
-
-		w.toggleStatus(i.Button)
-
-		go w.sendMessage()
 	}
 }
 
