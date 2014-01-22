@@ -38,14 +38,15 @@ func (b *Bar) barLoop() {
 }
 
 func (b *Bar) readLoop() {
-	var i string
+	var s string
 	if len(b.subs) == 0 {
 		return
 	}
 	for {
-		fmt.Fscanf(b.In, "%s", &i)
+		fmt.Fscanln(b.In, &s)
+		s = strings.TrimPrefix(s, ",")
 		for _, c := range b.subs {
-			c <- *NewEntry(i)
+			c <- NewEntry(s)
 		}
 	}
 }

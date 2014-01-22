@@ -32,7 +32,7 @@ func TestBarAdd(t *testing.T) {
 			b.Add(w1)
 			b.Add(w2)
 			Convey("it gets messages from the widgets", func() {
-				time.Sleep(1 * 1e9)
+				time.Sleep(1)
 				So(len(b.Messages), ShouldEqual, 2)
 			})
 		})
@@ -88,6 +88,7 @@ func TestBarAddLength(t *testing.T) {
 		})
 	})
 }
+
 func TestBarSendsEntries(t *testing.T) {
 	Convey("Given a subscriber with a channel", t, func() {
 		c := make(chan i3status.Message)
@@ -101,6 +102,35 @@ func TestBarSendsEntries(t *testing.T) {
 			Convey("an Entry is sent on the channel", func() {
 				en := <-w1.Input
 				So(en.Name, ShouldEqual, "test")
+			})
+		})
+	})
+}
+
+func TestBarSendsMultipleEntries(t *testing.T) {
+	Convey("Given a subscriber with a channel", t, func() {
+		c := make(chan i3status.Message)
+		b := i3status.NewBar(c)
+		w1 := i3status.NewBaseWidget()
+		b.Add(w1)
+		Convey("when a multiple messages are sent", func() {
+
+			Convey("an Entry is sent on the channel", func() {
+				input := `{"name":"test","instance":"eth0","button":1,"x":1320,"y":1400}`
+				b.In = strings.NewReader(input)
+				time.Sleep(1)
+				en := <-w1.Input
+				So(en.Name, ShouldEqual, "test")
+				input = `{"name":"test1","instance":"eth0","button":1,"x":1320,"y":1400}`
+				b.In = strings.NewReader(input)
+				time.Sleep(1)
+				en = <-w1.Input
+				So(en.Name, ShouldEqual, "test1")
+				input = `{"name":"test2","instance":"eth0","button":1,"x":1320,"y":1400}`
+				b.In = strings.NewReader(input)
+				time.Sleep(1)
+				en = <-w1.Input
+				So(en.Name, ShouldEqual, "test2")
 			})
 		})
 	})

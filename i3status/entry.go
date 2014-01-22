@@ -12,8 +12,8 @@ type Entry struct {
 	Y        int    `json:"y"`
 }
 
-func NewEntry(str string) *Entry {
+func NewEntry(str string) Entry {
 	var e Entry
 	json.Unmarshal([]byte(str), &e)
-	return &e
+	return e
 }
