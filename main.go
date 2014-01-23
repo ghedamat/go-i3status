@@ -28,9 +28,9 @@ func main() {
 	b := i3status.NewBar()
 
 	b.Add(i3status.NewTimerWidget())
-	b.Add(i3status.NewDateWidget())
-	//b.Add(i3status.NewOnOffWidget())
-	//w4 := i3status.NewI3statusWidget()
+	//b.Add(i3status.NewDateWidget())
+	b.Add(i3status.NewOnOffWidget())
+	b.Add(i3status.NewI3statusWidget())
 	b.Add(i3status.NewEchoWidget())
 
 	for {

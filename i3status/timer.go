@@ -3,6 +3,7 @@ package i3status
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 const (
@@ -16,20 +17,28 @@ const (
 
 type TimerWidget struct {
 	BaseWidget
-	Status string
+	Status    string
+	StartTime time.Time
+	Minutes   float64
 }
 
 func NewTimerWidget() *TimerWidget {
 	instanceCount++
 	w := TimerWidget{
-		*NewBaseWidget(),
-		"stopped",
+		BaseWidget: *NewBaseWidget(),
+		Status:     "stopped",
 	}
 	return &w
 }
 
 func (w *TimerWidget) message() string {
-	return "Timer " + w.Status
+	min := 0.0
+	if w.Status == "running" {
+		min = w.Minutes + time.Since(w.StartTime).Minutes()
+	} else {
+		min = w.Minutes
+	}
+	return fmt.Sprintf("Timer %s %.2f", w.Status, min)
 }
 
 func (w *TimerWidget) sendMessage() {
@@ -41,15 +50,35 @@ func (w *TimerWidget) sendMessage() {
 	w.Output <- *msg
 }
 
+func (w *TimerWidget) run() {
+	w.Status = "running"
+	w.StartTime = time.Now()
+}
+func (w *TimerWidget) pause() {
+	w.Status = "paused"
+	elapsed := time.Since(w.StartTime)
+	w.Minutes = w.Minutes + elapsed.Minutes()
+}
+func (w *TimerWidget) resume() {
+	w.Status = "running"
+	w.StartTime = time.Now()
+}
+func (w *TimerWidget) stop() {
+	w.Status = "stopped"
+	w.Minutes = 0
+}
+
 func (w *TimerWidget) toggleStatus(button int) {
 	if button == LeftButton {
-		if w.Status == "stopped" || w.Status == "paused" {
-			w.Status = "running"
+		if w.Status == "stopped" {
+			w.run()
+		} else if w.Status == "paused" {
+			w.resume()
 		} else if w.Status == "running" {
-			w.Status = "paused"
+			w.pause()
 		}
 	} else if button == RightButton {
-		w.Status = "stopped"
+		w.stop()
 	}
 
 }
@@ -64,7 +93,14 @@ func (w *TimerWidget) readLoop() {
 	}
 }
 
+func (w *TimerWidget) msgLoop() {
+	for {
+		time.Sleep(1 * 1000000000)
+		go w.sendMessage()
+	}
+}
+
 func (w *TimerWidget) Start() {
-	go w.sendMessage()
 	go w.readLoop()
+	go w.msgLoop()
 }
