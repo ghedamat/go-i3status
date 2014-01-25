@@ -10,9 +10,9 @@ const (
 	LeftButton   = 1
 	MiddleButton = 2
 	RightButton  = 3
-	Started      = "started"
-	Stopped      = "stopped"
-	Paused       = "paused"
+	Started      = "▶ started"
+	Stopped      = "◼ stopped"
+	Paused       = "◢ paused"
 )
 
 type TimerWidget struct {
@@ -26,19 +26,19 @@ func NewTimerWidget() *TimerWidget {
 	instanceCount++
 	w := TimerWidget{
 		BaseWidget: *NewBaseWidget(),
-		Status:     "stopped",
+		Status:     Stopped,
 	}
 	return &w
 }
 
 func (w *TimerWidget) message() string {
 	min := 0.0
-	if w.Status == "running" {
+	if w.Status == Started {
 		min = w.Minutes + time.Since(w.StartTime).Minutes()
 	} else {
 		min = w.Minutes
 	}
-	return fmt.Sprintf("Timer %s %.2f", w.Status, min)
+	return fmt.Sprintf("%s %.1fm", w.Status, min)
 }
 
 func (w *TimerWidget) sendMessage() {
@@ -51,30 +51,30 @@ func (w *TimerWidget) sendMessage() {
 }
 
 func (w *TimerWidget) run() {
-	w.Status = "running"
+	w.Status = Started
 	w.StartTime = time.Now()
 }
 func (w *TimerWidget) pause() {
-	w.Status = "paused"
+	w.Status = Paused
 	elapsed := time.Since(w.StartTime)
 	w.Minutes = w.Minutes + elapsed.Minutes()
 }
 func (w *TimerWidget) resume() {
-	w.Status = "running"
+	w.Status = Started
 	w.StartTime = time.Now()
 }
 func (w *TimerWidget) stop() {
-	w.Status = "stopped"
+	w.Status = Stopped
 	w.Minutes = 0
 }
 
 func (w *TimerWidget) toggleStatus(button int) {
 	if button == LeftButton {
-		if w.Status == "stopped" {
+		if w.Status == Stopped {
 			w.run()
-		} else if w.Status == "paused" {
+		} else if w.Status == Paused {
 			w.resume()
-		} else if w.Status == "running" {
+		} else if w.Status == Started {
 			w.pause()
 		}
 	} else if button == RightButton {
