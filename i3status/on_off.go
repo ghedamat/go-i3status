@@ -38,13 +38,15 @@ func (w *OnOffWidget) sendMessage() {
 
 func (w *OnOffWidget) readLoop() {
 	for {
-		<-w.Input
-		if w.On {
-			w.On = false
-		} else {
-			w.On = true
+		i := <-w.Input
+		if i.Name == "OnOff" {
+			if w.On {
+				w.On = false
+			} else {
+				w.On = true
+			}
+			go w.sendMessage()
 		}
-		go w.sendMessage()
 	}
 }
 
