@@ -32,10 +32,10 @@ func TestTimerWidgetStartEvent(t *testing.T) {
 			msg := <-c
 			i <- i3status.Entry{"Timer", "0", 1, 0, 0}
 			time.Sleep(1)
-			Convey("timer status is running", func() {
-				So(w.Status, ShouldEqual, "running")
+			Convey("timer status is started", func() {
+				So(w.Status, ShouldContainSubstring, "started")
 				msg = <-c
-				So(msg.FullText, ShouldEqual, "Timer running")
+				So(msg.FullText, ShouldContainSubstring, "started")
 			})
 		})
 	})
@@ -55,8 +55,8 @@ func TestTimerWidgetPauseEvent(t *testing.T) {
 			time.Sleep(1)
 			Convey("timer status is paused", func() {
 				msg = <-c
-				So(w.Status, ShouldEqual, "paused")
-				So(msg.FullText, ShouldEqual, "Timer paused")
+				So(w.Status, ShouldContainSubstring, "paused")
+				So(msg.FullText, ShouldContainSubstring, "paused")
 			})
 		})
 	})
@@ -76,8 +76,8 @@ func TestTimerWidgetStopEvent(t *testing.T) {
 			time.Sleep(1)
 			Convey("timer status is stopped", func() {
 				msg = <-c
-				So(w.Status, ShouldEqual, "stopped")
-				So(msg.FullText, ShouldEqual, "Timer stopped")
+				So(w.Status, ShouldContainSubstring, "stopped")
+				So(msg.FullText, ShouldContainSubstring, "stopped")
 			})
 		})
 	})

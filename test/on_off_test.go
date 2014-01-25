@@ -27,7 +27,7 @@ func TestOnOffWidget(t *testing.T) {
 		w.SetChannels(c, i)
 		w.Start()
 		Convey("When an entry is sent", func() {
-			w.Input <- i3status.Entry{}
+			w.Input <- i3status.Entry{Name: "OnOff"}
 			Convey("widget status goes on", func() {
 				So(w.On, ShouldEqual, true)
 			})
@@ -44,7 +44,7 @@ func TestOnOffWidgetMessage(t *testing.T) {
 		Convey("When and entry is sent", func() {
 			msg := <-c
 			So(msg.FullText, ShouldEqual, "Pants Off")
-			w.Input <- i3status.Entry{}
+			w.Input <- i3status.Entry{Name: "OnOff"}
 			Convey("widget message is On", func() {
 				msg = <-c
 				So(msg.FullText, ShouldEqual, "Pants On")
