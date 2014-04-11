@@ -30,7 +30,7 @@ func TestPowerWidgetHasMessage(t *testing.T) {
 			w.Start()
 			Convey("output message is available", func() {
 				msg := <-c
-				So(msg.FullText, ShouldContainSubstring, "Battery")
+				So(msg.FullText, ShouldContainSubstring, "BAT")
 			})
 		})
 	})

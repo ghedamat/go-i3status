@@ -32,7 +32,7 @@ func main() {
 	b.Add(i3status.NewPowerWidget())
 	b.Add(i3status.NewOnOffWidget())
 	b.Add(i3status.NewI3statusWidget())
-	b.Add(i3status.NewEchoWidget())
+	//b.Add(i3status.NewEchoWidget())
 
 	for {
 		m := <-b.Output
