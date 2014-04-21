@@ -23,8 +23,9 @@ func (w *DateWidget) basicLoop() {
 	msg.Name = "Date"
 	msg.Color = "#ffffff"
 	msg.Instance = strconv.Itoa(w.Instance)
+	const layout = "3:04pm, Jan 2, 2006"
 	for {
-		msg.FullText = fmt.Sprintf("%s", time.Now())
+		msg.FullText = fmt.Sprintf("%s", time.Now().Format(layout))
 		w.Output <- *msg
 		time.Sleep(w.Refresh * time.Millisecond)
 	}
