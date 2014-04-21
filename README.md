@@ -19,5 +19,6 @@ Clone the repo and edit main.go to add/remove widgets.
 * DateWidget
 * TimerWidget (start/pause/stop timer)
 * OnOffWidget (PantsOn PantsOff)
+* WlanWidget (basic Wlan status indicator using `nm-tool`)
 
 
