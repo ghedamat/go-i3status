@@ -39,16 +39,17 @@ func (w *PowerWidget) getStatus() (string, string) {
 	bar := MakeBar(bi.PercentRemaining, 20)
 	remaining := HumanDuration(int64(bi.SecondsRemaining))
 	prefix := "BAT"
-	color := "#ffffff"
+	color := WHITE
 	if bi.IsCharging() {
 		prefix = "CHR"
+		color = GREEN
 	} else if bi.IsFull() {
 		prefix = "FULL"
 	} else {
 		if bi.PercentRemaining < 10 {
-			color = "#ff0000"
+			color = RED
 		} else if bi.PercentRemaining < 30 {
-			color = "#ffff00"
+			color = YELLOW
 		}
 	}
 	return fmt.Sprintf("%s %s %s %0.1f%%", prefix, remaining, bar, bi.PercentRemaining), color

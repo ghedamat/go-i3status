@@ -10,6 +10,13 @@ import (
 	"os"
 )
 
+const (
+	RED    = "#ff0000"
+	YELLOW = "#ffff00"
+	GREEN  = "#00ff00"
+	WHITE  = "#ffffff"
+)
+
 func ReadLines(fileName string, callback func(string) bool) {
 	fin, err := os.Open(fileName)
 	if err != nil {
