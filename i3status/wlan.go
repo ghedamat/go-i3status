@@ -60,7 +60,10 @@ func (w *WlanWidget) getStatus() (string, string) {
 		info.color = RED
 	} else {
 		re = regexp.MustCompile("\\[.*\\]")
-		info.NetworkName = re.FindAllString(lines[5], -1)[0]
+		matches := re.FindAllString(lines[5], -1)
+		if len(matches) > 0 {
+			info.NetworkName = matches[0]
+		}
 	}
 
 	return fmt.Sprintf("WLAN: %s %s", info.NetworkStatus, info.NetworkName), info.color
