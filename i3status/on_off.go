@@ -14,7 +14,7 @@ func NewOnOffWidget() *OnOffWidget {
 	instanceCount++
 	w := OnOffWidget{
 		*NewBaseWidget(),
-		false,
+		true,
 	}
 	return &w
 }

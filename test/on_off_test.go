@@ -28,8 +28,8 @@ func TestOnOffWidget(t *testing.T) {
 		w.Start()
 		Convey("When an entry is sent", func() {
 			w.Input <- i3status.Entry{Name: "OnOff"}
-			Convey("widget status goes on", func() {
-				So(w.On, ShouldEqual, true)
+			Convey("widget status goes off", func() {
+				So(w.On, ShouldEqual, false)
 			})
 		})
 	})
@@ -43,11 +43,11 @@ func TestOnOffWidgetMessage(t *testing.T) {
 		w.Start()
 		Convey("When and entry is sent", func() {
 			msg := <-c
-			So(msg.FullText, ShouldEqual, "Pants Off")
+			So(msg.FullText, ShouldEqual, "Pants On")
 			w.Input <- i3status.Entry{Name: "OnOff"}
-			Convey("widget message is On", func() {
+			Convey("widget message is Off", func() {
 				msg = <-c
-				So(msg.FullText, ShouldEqual, "Pants On")
+				So(msg.FullText, ShouldEqual, "Pants Off")
 			})
 		})
 	})
