@@ -15,6 +15,7 @@ const (
 	YELLOW = "#ffff00"
 	GREEN  = "#00ff00"
 	WHITE  = "#ffffff"
+	BLUE   = "#0000ff"
 )
 
 func ReadLines(fileName string, callback func(string) bool) {
