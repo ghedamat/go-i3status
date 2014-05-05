@@ -39,7 +39,7 @@ func (w *WeatherWidget) basicLoop() {
 	for {
 		msg.FullText, msg.Color = w.getStatus(key)
 		w.Output <- *msg
-		time.Sleep(5000 * time.Millisecond)
+		time.Sleep(600000 * time.Millisecond)
 	}
 }
 
