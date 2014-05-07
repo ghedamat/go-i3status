@@ -49,8 +49,9 @@ func (w *WeatherWidget) getStatus(key string) (string, string) {
 	long := "-79.3433"
 
 	f, err := forecast.Get(key, lat, long, "now", forecast.CA)
+
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Sprintf("WEATHER: CONN:ERR"), RED
 	}
 	return fmt.Sprintf("%s: %s %.2f C", f.Timezone, f.Currently.Summary, f.Currently.Temperature), BLUE
 }
